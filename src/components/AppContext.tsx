@@ -16,7 +16,7 @@ type CartContextType = {
   cartProducts: CartProduct[];
   setCartProducts: React.Dispatch<React.SetStateAction<CartProduct[]>>;
   addToCart: (product: CartProduct, size: { _id: string; name: string; price: number } | null, extras: { _id: string; name: string; price: number }[]) => void;
-  removeCartProduct: (event: React.MouseEvent<HTMLButtonElement>, indexToRemove: number) => void;
+  removeCartProduct: (event: React.MouseEvent<HTMLButtonElement>, indexToRemove: string) => void;
   clearCart: () => void;
 };
 
@@ -61,9 +61,9 @@ export function AppProvider({ children }: AppProviderProps) {
     saveCartProductsToLocalStorage([]);
   }
 
-  function removeCartProduct(event: React.MouseEvent<HTMLButtonElement>, indexToRemove: number) {
+  function removeCartProduct(event: React.MouseEvent<HTMLButtonElement>, indexToRemove: string) {
     setCartProducts((prevCartProducts) => {
-      const newCartProducts = prevCartProducts.filter((_, index) => index !== indexToRemove);
+      const newCartProducts = prevCartProducts.filter(product => product._id !== indexToRemove);
       saveCartProductsToLocalStorage(newCartProducts);
       return newCartProducts;
     });

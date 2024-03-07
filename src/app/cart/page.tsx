@@ -9,9 +9,18 @@ import CartProduct from "@/components/menu/CartProduct";
 import { useProfile } from "@/components/UseProfile";
 import Image from "next/image";
 
+
+type addressProps = {
+  phone?: string;
+  streetAddress?: string;
+  postalCode?: string;
+  city?: string;
+  country?: string;
+};
+
 export default function CartPage() {
   const { cartProducts, removeCartProduct } = useContext(CartContext);
-  const [address, setAddress] = useState<any>({});
+  const [address, setAddress] = useState<addressProps>({});
   const { data: profileData } = useProfile();
 
   useEffect(() => {
