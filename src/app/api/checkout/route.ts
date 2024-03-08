@@ -36,14 +36,23 @@ export async function POST(req: NextRequest, res: NextResponse) {
   // const session = await getServerSession({ req });
   const session = await getServerSession(authOptions);
   const userEmail = session?.user?.email;
+  const phone = address.phone;
+  const streetAddress = address.streetAddress;
+  const postalCode = address.postalCode;
+  const city = address.city;
+  const country = address.country;
 
   const orderDoc = await Order.create({
     userEmail,
-    ...address,
+    phone,
+    streetAddress,
+    postalCode,
+    city,
+    country,
     cartProducts,
     paid: false,
   });
-
+  
   const stripeLineItems: Stripe.Checkout.SessionCreateParams.LineItem[] = [];
   for (const cartProduct of cartProducts) {
     const productInfo = await MenuItem.findById(cartProduct._id);

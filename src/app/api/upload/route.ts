@@ -39,53 +39,60 @@
 //   }
 //   return NextResponse.json(true);
 // }
-
 import { NextRequest, NextResponse } from 'next/server';
-import multer from 'multer';
+import fs from 'fs';
+import path from 'path';
+import uniqid from 'uniqid';
 
 export async function POST(req: NextRequest, res: NextResponse) {
+  const data = await req.formData();
+  const fileEntry = data.get('file');
 
-  // Multer Configuration
-  const upload = multer({
-    storage: multer.diskStorage({
-      destination: "./public/uploads",
-      filename: (req, file, cb) => cb(null, file.originalname), // Save files with their original names
-    }),
-  });
-
-  // Add multer as a middleware
-  const uploadMiddleware = upload.single("file"); // for single file upload
-  await new Promise<void>((resolve, reject) => {
-    uploadMiddleware(req as any, res as any, (error: any) => {
-      if (error) {
-        return reject(error);
+  if (fileEntry instanceof Blob) {
+    // Handle single file
+    const link = await saveFile(fileEntry);
+    return NextResponse.json({ link });
+  } else if (Array.isArray(fileEntry)) {
+    // Handle multiple files (if applicable)
+    for (const file of fileEntry) {
+      if (file instanceof Blob) {
+        await saveFile(file);
       }
-      // const link = 'http://localhost:3000/uploads/' + (req as any).file.originalname;
-        // await NextResponse.json(link); // Return the link as JSON
-      resolve();
-    });
-  });
+    }
+    return NextResponse.json('https://www.godubrovnik.com/wp-content/uploads/pizza.jpg');
+  }
 
-  const link = 'https://www.godubrovnik.com/wp-content/uploads/pizza.jpg'
+  return NextResponse.json({ error: 'No file uploaded' });
+}
 
-  // Process a POST request
-  return NextResponse.json(link);
-  return NextResponse.json({ data: "success" });
-  
-};
+async function saveFile(file: Blob): Promise<string> {
+  const fileBuffer = Buffer.from(await file.arrayBuffer());
+  const ext = getFileExtension(file.type);
+  if (!ext) {
+    throw new Error('Unsupported file type');
+  }
+  const newFileName = uniqid() + '.' + ext;
+  const uploadDir = path.join(process.cwd(), 'public', 'uploads');
+  const filePath = path.join(uploadDir, newFileName);
 
+  fs.mkdirSync(uploadDir, { recursive: true });
+  fs.writeFileSync(filePath, fileBuffer);
 
+  // Return the link to the uploaded file if needed
+  const link = '/uploads/' + newFileName;
+  console.log('File saved at:', filePath);
 
+  return link;
+}
 
-
-
-
-
-
-
-
-
-
+function getFileExtension(mimeType: string): string | null {
+  const extensions: Record<string, string> = {
+    'image/jpeg': 'jpg',
+    'image/png': 'png',
+    'image/gif': 'gif',
+  };
+  return extensions[mimeType] || null;
+}
 
 
 

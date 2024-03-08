@@ -19,7 +19,8 @@ export default function EditableImage({ link, setLink }: EditableImageProps) {
       }).then(response => {
         if (response.ok) {
           return response.json().then(link => {
-            setLink(link);
+            console.log("linksaeed" + link);
+            setLink(link.link);
           })
         }
         throw new Error('Something went wrong');
@@ -39,8 +40,9 @@ export default function EditableImage({ link, setLink }: EditableImageProps) {
 
   return (
     <>
+    {console.log('Link:', link)} 
       {link && (
-        <img className="rounded-lg w-full h-full mb-1" src={link} width={250} height={250} alt={'avatar'} />
+        <img className="rounded-lg w-full h-full mb-1" src={link} width={250} height={250} alt={link} />
       )}
       {!link && (
         <div className="text-center bg-gray-200 p-4 text-gray-500 rounded-lg mb-1">

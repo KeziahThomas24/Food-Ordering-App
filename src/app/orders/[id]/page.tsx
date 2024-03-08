@@ -1,6 +1,5 @@
 'use client'
-'use client'
-import { CartContext, cartProductPrice} from "@/components/AppContext";
+import { CartContext, cartProductPrice } from "@/components/AppContext";
 import AddressInputs from "@/components/layout/AddressInputs";
 import SectionHeaders from "@/components/layout/SectionHeaders";
 import CartProduct from "@/components/menu/CartProduct";
@@ -49,16 +48,45 @@ export default function OrderPage() {
         clearCart();
       }
     }
-    if (id) {
-      setLoadingOrder(true);
-      fetch('/api/orders?_id=' + id)
-        .then(res => res.json())
-        .then((orderData: OrderType) => {
-          setOrder(orderData);
-          setLoadingOrder(false);
-        });
-    }
-  }, [id]);
+  //   if (id) {
+  //     setLoadingOrder(true);
+  //     fetch('/api/orders?_id=' + id)
+  //       .then(res => res.json())
+  //       .then((orderData: OrderType) => {
+  //         setOrder(orderData);
+  //         setLoadingOrder(false);
+  //       });
+  //   }
+  // }, [id]);
+  if (id) {
+    setLoadingOrder(true);
+    fetch('/api/orders?_id=' + id)
+      .then(res => res.json())
+      .then((orderData: any) => {
+        // Create new OrderType object
+        const newOrder: OrderType = {
+          _id: orderData._id,
+          paid: orderData.paid,
+          userEmail: orderData.userEmail,
+          createdAt: orderData.createdAt,
+          cartProducts: orderData.cartProducts,
+          address: {
+            addressProps: {
+              phone: orderData.phone,
+              streetAddress: orderData.streetAddress,
+              postalCode: orderData.postalCode,
+              city: orderData.city,
+              country: orderData.country
+            },
+            setAddressProp: () => {},
+            disabled: true
+          }
+        };
+        setOrder(newOrder);
+        setLoadingOrder(false);
+      });
+  }
+}, [id]);
 
   let subtotal = 0;
   if (order?.cartProducts) {
@@ -79,7 +107,7 @@ export default function OrderPage() {
       {loadingOrder && (
         <div>Loading order...</div>
       )}
-      {order && (
+      {order && order.address && (
         <div className="grid md:grid-cols-2 md:gap-16">
           <div>
             {order.cartProducts.map(product => (
@@ -102,8 +130,8 @@ export default function OrderPage() {
             <div className="bg-gray-100 p-4 rounded-lg">
               <AddressInputs
                 disabled={true}
-                addressProps={order.address["addressProps"]}
-                setAddressProp={order.address["setAddressProp"]}
+                addressProps={order.address.addressProps}
+                setAddressProp={order.address.setAddressProp}
               />
             </div>
           </div>
