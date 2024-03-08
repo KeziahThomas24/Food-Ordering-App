@@ -5,10 +5,11 @@ import Link from "next/link";
 import { CartContext } from "@/components/AppContext";
 import Bars2 from "@/components/icons/Bars2";
 import ShoppingCart from "@/components/icons/ShoppingCart";
+import ContactForm from "@/components/layout/ContactForm";
 
-type AuthStatus = 'authenticated' | 'unauthenticated';
+type AuthStatus = 'loading' | 'authenticated' | 'unauthenticated';
 
-function AuthLinks({ status, userName }: { status: AuthStatus; userName: string | null }) {
+function AuthLinks({ status, userName }: { status: AuthStatus; userName: string | undefined }) {
   if (status === 'authenticated') {
     return (
       <>
@@ -42,6 +43,8 @@ export default function Header() {
   let userName = userData?.name || userData?.email;
   const { cartProducts } = useContext(CartContext);
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
+  const [showContactForm, setShowContactForm] = useState(false); // State to control the visibility of the contact form
+
   if (userName && userName.includes(' ')) {
     userName = userName.split(' ')[0];
   }
@@ -75,6 +78,7 @@ export default function Header() {
           <Link href={'/menu'}>Menu</Link>
           <Link href={'/#about'}>About</Link>
           <Link href={'/#contact'}>Contact</Link>
+          {/* <button onClick={() => setShowContactForm(true)}>Contact</button> Button to toggle contact form */}
           <AuthLinks status={status} userName={userName} />
         </div>
       )}
@@ -87,6 +91,7 @@ export default function Header() {
           <Link href={'/menu'}>Menu</Link>
           <Link href={'/#about'}>About</Link>
           <Link href={'/#contact'}>Contact</Link>
+          {/* <button onClick={() => setShowContactForm(true)}>Contact</button> Button to toggle contact form */}
         </nav>
         <nav className="flex items-center gap-4 text-gray-500 font-semibold">
           <AuthLinks status={status} userName={userName} />
@@ -100,6 +105,7 @@ export default function Header() {
           </Link>
         </nav>
       </div>
+      {showContactForm && <ContactForm />} {/* Render the ContactForm component when showContactForm is true */}
     </header>
   );
 }

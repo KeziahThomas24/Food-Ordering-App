@@ -40,71 +40,57 @@
 //   return NextResponse.json(true);
 // }
 
-
 import { NextRequest, NextResponse } from 'next/server';
 import multer from 'multer';
-import path from 'path';
-
-// Define the type for the req.file object
-type MulterFile = {
-  fieldname: string;
-  originalname: string;
-  encoding: string;
-  mimetype: string;
-  size: number;
-  destination: string;
-  filename: string;
-  path: string;
-  buffer: Buffer;
-};
-
-const upload = multer({
-  dest: './public/uploads/', // Destination folder for uploaded files
-  limits: {
-    fileSize: 5 * 1024 * 1024, // 5MB file size limit
-  },
-});
-
-export const config = {
-  api: {
-    bodyParser: false, // Disables automatic body parsing, let multer handle it
-  },
-};
 
 export async function POST(req: NextRequest, res: NextResponse) {
-  try {
-    await new Promise<void>((resolve, reject) => {
-      upload.single('file')(req as any, res as any, (err: any) => {
-        if (err instanceof multer.MulterError) {
-          // res.status(400).json({ error: 'Multer error: ' + err.message });
-          NextResponse.json({ error: 'Multer error' },{status:400})
-          reject(err);
-        } else if (err) {
-          // res.status(500).json({ error: 'Internal server error' });
-          NextResponse.json({ error: 'Internal server error' },{status:500})
-          reject(err);
-        } else {
-          resolve();
-        }
-      });
+
+  // Multer Configuration
+  const upload = multer({
+    storage: multer.diskStorage({
+      destination: "./public/uploads",
+      filename: (req, file, cb) => cb(null, file.originalname), // Save files with their original names
+    }),
+  });
+
+  // Add multer as a middleware
+  const uploadMiddleware = upload.single("file"); // for single file upload
+  await new Promise<void>((resolve, reject) => {
+    uploadMiddleware(req as any, res as any, (error: any) => {
+      if (error) {
+        return reject(error);
+      }
+      // const link = 'http://localhost:3000/uploads/' + (req as any).file.originalname;
+        // await NextResponse.json(link); // Return the link as JSON
+      resolve();
     });
+  });
 
-    const uploadedFile = (req as any).file as MulterFile;
+  const link = 'https://www.godubrovnik.com/wp-content/uploads/pizza.jpg'
 
-    if (!uploadedFile) {
-      // return res.status(400).json({ error: 'No file uploaded' });
-      return NextResponse.json({ error: 'No file uploaded' },{status:400})
-    }
+  // Process a POST request
+  return NextResponse.json(link);
+  return NextResponse.json({ data: "success" });
+  
+};
 
-    const filePath = uploadedFile.path;
-    const fileName = uploadedFile.originalname;
-    const fullPath = path.join(filePath);
 
-    // res.status(200).json({ message: 'File uploaded successfully', path: fullPath });
-    return NextResponse.json({ message: 'File uploaded successfully', path: fullPath },{status:200})
-  } catch (error) {
-    console.error('Error uploading file:', error);
-    // res.status(500).json({ error: 'Internal server error' });
-    return NextResponse.json({ error: 'Internal server error' })
-  }
-}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// export const config = {
+//   api: {
+//     bodyParser: false, // Disallow body parsing
+//   },
+// };

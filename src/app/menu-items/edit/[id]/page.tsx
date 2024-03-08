@@ -17,13 +17,13 @@ type Category = {
 }
 
 type MenuItem = {
-  _id: string;
+  _id?: string;
   image: string;
   name: string;
   description: string;
   basePrice: number;
-  sizes?: { _id: string; name: string; price: number }[];
-  extraIngredientPrices?: { _id: string; name: string; price: number }[];
+  sizes?: { _id?: string; name: string; price: number }[];
+  extraIngredientPrices?: { _id?: string; name: string; price: number }[];
   category: Category;
 }
 
@@ -46,7 +46,7 @@ export default function EditMenuItemPage() {
 
   async function handleFormSubmit(ev: React.FormEvent<HTMLFormElement>, data: MenuItem) {
     ev.preventDefault();
-    data = { ...data, _id: id };
+    data = { ...data, _id: id[0] };
     const savingPromise = new Promise<void>(async (resolve, reject) => {
       const response = await fetch('/api/menu-items', {
         method: 'PUT',

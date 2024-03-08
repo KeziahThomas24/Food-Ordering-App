@@ -2,12 +2,15 @@ import Header from "@/components/layout/Header";
 import Hero from "@/components/layout/Hero";
 import HomeMenu from "@/components/layout/HomeMenu";
 import SectionHeaders from "@/components/layout/SectionHeaders";
-import { authOptions } from "./api/auth/[...nextauth]/route";
+import { authOptions } from "@/auth";
 import { getServerSession } from "next-auth";
 import { getSession } from "next-auth/react";
+import { useState } from "react";
+import ContactForm from "@/components/layout/ContactForm";
 
 export default async function Home() {
   const session = await getSession();
+  // const [showContactForm, setShowContactForm] = useState(false);
   return (
     <>
       {/* <div>
@@ -42,6 +45,8 @@ export default async function Home() {
           <a className="text-4xl underline text-gray-500" href="tel:+46738123123">
             +46 738 123 123
           </a>
+          <ContactForm />
+          {/* <button onClick={() => setShowContactForm(true)}>Contact</button> */}
         </div>
       </section>
     </>

@@ -1,5 +1,5 @@
-import { NextApiRequest, NextApiResponse } from 'next';
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { NextRequest, NextResponse } from 'next/server';
+import { authOptions } from "@/auth";
 import { MenuItem } from "@/models/MenuItem";
 import { Order } from "@/models/Order";
 import mongoose from "mongoose";
@@ -7,7 +7,7 @@ import { getServerSession } from "next-auth";
 import Stripe from 'stripe';
 
 const stripe = new Stripe(process.env.STRIPE_SK!, {
-  apiVersion: '2020-08-27',
+  apiVersion: '2023-10-16',
 });
 
 type CartProduct = {
@@ -22,14 +22,19 @@ type CartProduct = {
 };
 
 type Address = {
-  // Define address properties
+  phone?: string;
+  streetAddress?: string;
+  postalCode?: string;
+  city?: string;
+  country?: string;
 };
 
-export async function POST(req: NextApiRequest, res: NextApiResponse) {
+export async function POST(req: NextRequest, res: NextResponse) {
   await mongoose.connect(process.env.MONGO_URL!);
 
   const { cartProducts, address }: { cartProducts: CartProduct[], address: Address } = await req.json();
-  const session = await getServerSession({ req });
+  // const session = await getServerSession({ req });
+  const session = await getServerSession(authOptions);
   const userEmail = session?.user?.email;
 
   const orderDoc = await Order.create({
@@ -46,14 +51,14 @@ export async function POST(req: NextApiRequest, res: NextApiResponse) {
     let productPrice = productInfo.basePrice;
     if (cartProduct.size) {
       const size = productInfo.sizes
-        .find(size => size._id.toString() === cartProduct.size!._id.toString());
+        .find((size: { _id: { toString: () => string; }; }) => size._id.toString() === cartProduct.size!._id.toString());
       productPrice += size!.price;
     }
-    if (cartProduct.extras?.length > 0) {
+    if (cartProduct.extras?.length && cartProduct.extras?.length > 0) {
       for (const cartProductExtraThing of cartProduct.extras) {
         const productExtras = productInfo.extraIngredientPrices;
         const extraThingInfo = productExtras
-          .find(extra => extra._id.toString() === cartProductExtraThing._id.toString());
+          .find((extra: { _id: { toString: () => string; }; }) => extra._id.toString() === cartProductExtraThing._id.toString());
         productPrice += extraThingInfo!.price;
       }
     }
@@ -93,5 +98,5 @@ export async function POST(req: NextApiRequest, res: NextApiResponse) {
     ],
   });
 
-  return res.json({ url: stripeSession.url });
+  return NextResponse.json({ url: stripeSession.url });
 }

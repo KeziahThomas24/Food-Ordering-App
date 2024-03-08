@@ -29,8 +29,13 @@ const MenuItemPriceProps: React.FC<MenuItemPricePropsProps> = ({ name, addLabel,
   const editProp = (ev: React.ChangeEvent<HTMLInputElement>, index: number, prop: keyof PriceProp) => {
     const newValue = ev.target.value;
     setProps(prevSizes => {
-      const newSizes = [...prevSizes];
-      newSizes[index][prop] = newValue;
+      // const newSizes: PriceProp[] = [...prevSizes];
+      // // const newSizes = [...prevSizes];
+      // newSizes[index][prop] = newValue;
+      // return newSizes;
+
+      const newSizes: PriceProp[] = [...prevSizes];
+      newSizes[index] = { ...newSizes[index], [prop]: newValue };
       return newSizes;
     });
   };

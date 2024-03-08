@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { authOptions } from "@/auth";
 import { User } from "@/models/User";
 import { UserInfo } from "@/models/UserInfo";
 import mongoose from "mongoose";

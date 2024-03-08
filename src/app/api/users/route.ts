@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { isAdmin } from "@/app/api/auth/[...nextauth]/route";
+import { isAdmin } from "@/auth";
 import { User } from "@/models/User";
 import mongoose from "mongoose";
 

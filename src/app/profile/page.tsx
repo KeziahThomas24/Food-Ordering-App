@@ -13,7 +13,7 @@ import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
 type UserType = {
-  _id: string;
+  _id?: string;
   name?: string;
   image?: string;
   phone?: string;

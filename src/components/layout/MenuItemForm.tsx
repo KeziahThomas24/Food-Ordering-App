@@ -3,6 +3,7 @@ import Plus from "@/components/icons/Plus";
 import Trash from "@/components/icons/Trash";
 import EditableImage from "@/components/layout/EditableImage";
 import MenuItemPriceProps from "@/components/layout/MenuItemPriceProps";
+import { Int32 } from "mongodb";
 
 type Category = {
   _id: string;
@@ -10,19 +11,19 @@ type Category = {
 }
 
 type MenuItem = {
-  _id: string;
+  _id?: string;
   image: string;
   name: string;
   description: string;
-  basePrice: string;
-  sizes?: { _id: string; name: string; price: number }[];
-  extraIngredientPrices?: { _id: string; name: string; price: number }[];
+  basePrice: number;
+  sizes?: { _id?: string; name: string; price: number }[];
+  extraIngredientPrices?: { _id?: string; name: string; price: number }[];
   category: Category;
 }
 
 type MenuItemFormProps = {
   onSubmit: (ev: React.FormEvent<HTMLFormElement>, data: MenuItem) => void;
-  menuItem: MenuItem;
+  menuItem: MenuItem|null;
 }
 
 const MenuItemForm: React.FC<MenuItemFormProps> = ({ onSubmit, menuItem }) => {
@@ -30,7 +31,7 @@ const MenuItemForm: React.FC<MenuItemFormProps> = ({ onSubmit, menuItem }) => {
   const [image, setImage] = useState<string>(menuItem?.image || '');
   const [name, setName] = useState(menuItem?.name || '');
   const [description, setDescription] = useState(menuItem?.description || '');
-  const [basePrice, setBasePrice] = useState(menuItem?.basePrice || '');
+  const [basePrice, setBasePrice] = useState(menuItem?.basePrice || 0.00);
   const [sizes, setSizes] = useState(menuItem?.sizes || []);
   const [category, setCategory] = useState<Category>({
     _id: '000000000000000000000000', // Dummy ObjectId string
@@ -89,7 +90,7 @@ const MenuItemForm: React.FC<MenuItemFormProps> = ({ onSubmit, menuItem }) => {
           <input
             type="text"
             value={basePrice}
-            onChange={ev => setBasePrice(ev.target.value)}
+            onChange={ev => setBasePrice(Number(ev.target.value))}
           />
           <input type="hidden" name="id" value={_id} />
           <MenuItemPriceProps name={'Sizes'}
