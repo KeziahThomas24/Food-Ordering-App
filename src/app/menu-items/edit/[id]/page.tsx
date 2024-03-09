@@ -5,6 +5,7 @@ import EditableImage from "@/components/layout/EditableImage";
 import MenuItemForm from "@/components/layout/MenuItemForm";
 import UserTabs from "@/components/layout/UserTab";
 import { useProfile } from "@/components/UseProfile";
+import { _id } from "@next-auth/mongodb-adapter";
 import Link from "next/link";
 import { redirect, useParams } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -46,7 +47,8 @@ export default function EditMenuItemPage() {
 
   async function handleFormSubmit(ev: React.FormEvent<HTMLFormElement>, data: MenuItem) {
     ev.preventDefault();
-    data = { ...data, _id: id[0] };
+    console.log(id);
+    data = { ...data, _id: Array.isArray(id) ? id[0] : id };
     const savingPromise = new Promise<void>(async (resolve, reject) => {
       const response = await fetch('/api/menu-items', {
         method: 'PUT',
