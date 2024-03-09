@@ -31,7 +31,7 @@ export default function CategoriesPage() {
   async function handleCategorySubmit(ev: React.FormEvent<HTMLFormElement>) {
     ev.preventDefault();
     const creationPromise = new Promise<void>(async (resolve, reject) => {
-      const data = { name: categoryName};
+      const data = { _id: '', name: categoryName};
       if (editedCategory) {
         data._id = editedCategory._id;
       }

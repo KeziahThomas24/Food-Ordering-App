@@ -2,7 +2,7 @@ import Header from "@/components/layout/Header";
 import Hero from "@/components/layout/Hero";
 import HomeMenu from "@/components/layout/HomeMenu";
 import SectionHeaders from "@/components/layout/SectionHeaders";
-import { authOptions } from "./api/auth/[...nextauth]/route";
+import { authOptions } from "@/auth";
 import { getServerSession } from "next-auth";
 import { getSession } from "next-auth/react";
 import { useState } from "react";

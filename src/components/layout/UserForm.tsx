@@ -5,7 +5,7 @@ import EditableImage from "@/components/layout/EditableImage";
 import { useProfile } from "@/components/UseProfile";
 
 type User = {
-  _id: string;
+  _id?: string;
   name?: string;
   image?: string;
   phone?: string;
@@ -18,7 +18,7 @@ type User = {
 };
 
 type UserFormProps = {
-  user: User;
+  user: User|null;
   onSave: (ev: React.FormEvent<HTMLFormElement>, data: User) => void;
 };
 

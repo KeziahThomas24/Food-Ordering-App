@@ -17,13 +17,13 @@ type Category = {
 }
 
 type MenuItem = {
-  _id: string;
+  _id?: string;
   image: string;
   name: string;
   description: string;
   basePrice: number;
-  sizes?: { _id: string; name: string; price: number }[];
-  extraIngredientPrices?: { _id: string; name: string; price: number }[];
+  sizes?: { _id?: string; name: string; price: number }[];
+  extraIngredientPrices?: { _id?: string; name: string; price: number }[];
   category: Category;
 }
 
@@ -63,7 +63,7 @@ export default function NewMenuItemPage() {
     return 'Loading user info...';
   }
 
-  if (!data.admin) {
+  if (!data?.admin) {
     return 'Not an admin.';
   }
 

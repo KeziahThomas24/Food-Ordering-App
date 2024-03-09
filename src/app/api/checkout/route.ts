@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { authOptions } from "@/auth";
 import { MenuItem } from "@/models/MenuItem";
 import { Order } from "@/models/Order";
 import mongoose from "mongoose";
@@ -107,6 +107,5 @@ export async function POST(req: NextRequest, res: NextResponse) {
     ],
   });
 
-  console.log(stripeSession.url);
   return NextResponse.json({ url: stripeSession.url });
 }
