@@ -11,11 +11,15 @@ const AddToCartButton: React.FC<AddToCartButtonProps> = ({ hasSizesOrExtras, onC
   if (!hasSizesOrExtras) {
     return (
       <div className="flying-button-parent mt-4">
-        <FlyingButton targetTop={'5%'} targetLeft={'95%'} src={image}>
-          <div onClick={onClick}>
+        {/* <FlyingButton targetTop={'5%'} targetLeft={'95%'} src={image}> */}
+          {/* <div onClick={onClick}>
             Add to cart ${basePrice}
-          </div>
-        </FlyingButton>
+          </div> */}
+        {/* </FlyingButton> */}
+        <img src={image} alt="Product" />
+        <button style={{ position: 'absolute', top: '5%', left: '95%', cursor: 'pointer' }} onClick={onClick}>
+          Add to cart ${basePrice}
+        </button>
       </div>
     );
   }

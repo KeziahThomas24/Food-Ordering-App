@@ -136,15 +136,18 @@ export default function MenuItem(menuItem: MenuItemProps) {
                   ))}
                 </div>
               )}
-              <FlyingButton
+              {/* <FlyingButton
                 targetTop={'5%'}
                 targetLeft={'95%'}
                 src={image}
-              >
-                <div className="primary sticky bottom-2" onClick={handleAddToCartButtonClick}>
+              > */}
+                {/* <div className="primary sticky bottom-2" onClick={handleAddToCartButtonClick}>
                   Add to cart ${selectedPrice}
+                </div> */}
+                <div className="primary sticky bottom-2">
+                  <button onClick={handleAddToCartButtonClick}>Add to cart ${selectedPrice}</button>
                 </div>
-              </FlyingButton>
+              {/* </FlyingButton> */}
               <button className="mt-2" onClick={() => setShowPopup(false)}>
                 Cancel
               </button>
