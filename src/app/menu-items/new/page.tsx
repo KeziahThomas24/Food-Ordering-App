@@ -21,7 +21,7 @@ type MenuItem = {
   image: string;
   name: string;
   description: string;
-  basePrice: number;
+  basePrice: string;
   sizes?: { _id?: string; name: string; price: number }[];
   extraIngredientPrices?: { _id?: string; name: string; price: number }[];
   category: Category;

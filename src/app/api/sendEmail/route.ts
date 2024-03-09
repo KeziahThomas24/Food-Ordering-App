@@ -33,7 +33,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
     // Email content
     const mailOptions = {
       from: 'stpizza.info@gmail.com',
-      to: email,
+      to: email as string,
       subject: 'Thank you for contacting us!',
       html: `
         <h2>Dear ${name},</h2>
