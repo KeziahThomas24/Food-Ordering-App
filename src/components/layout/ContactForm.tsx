@@ -27,12 +27,35 @@ const ContactForm: React.FC = () => {
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // Handle form submission logic here, e.g., send data to backend
-    console.log(formData);
-    // Close the modal after submission
-    closeModal();
+
+    try {
+      // Create FormData object
+      const formDataToSend = new FormData();
+      formDataToSend.append('name', formData.name);
+      formDataToSend.append('email', formData.email);
+      formDataToSend.append('message', formData.message);
+
+      // Send form data to backend API route
+      const response = await fetch('/api/sendEmail', {
+        method: 'POST',
+        body: formDataToSend, // Use FormData instead of JSON.stringify
+      });
+
+      if (response.ok) {
+        // Close the modal after successful submission
+        closeModal();
+        // Display a confirmation message to the user
+        alert("Thank you for contacting us! We'll reply to you at the earliest.");
+      } else {
+        throw new Error('Failed to send email');
+      }
+    } catch (error) {
+      console.error('Error sending email:', error);
+      // You can display an error message to the user if needed
+      alert('Oops! Something went wrong. Please try again later.');
+    }
   };
 
   return (
