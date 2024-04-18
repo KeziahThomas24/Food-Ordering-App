@@ -22,3 +22,8 @@ Once the payment is done, the cart is cleared.
 In the admin view, we can see the profile data, categories, menu-items, users and orders. All CRUD operations are designed for each of the aformentioned.
 
 
+## Tasks Division
+
+1. Athira - Home Page, Contact Form, Menu Page, UI Design
+2. Saeed - Login, Registration, Menu Item Page, Orders Page
+3. Keziah - API creation, Profile Page, Category Page, Checkout Page, Cart Page
